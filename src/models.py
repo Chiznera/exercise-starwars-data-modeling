@@ -17,15 +17,18 @@ class User(Base):
     first_name = Column(String(256), nullable=False)
     last_name = Column(String(256), nullable=False)
     email = Column(String(256), nullable=False)
+    password = Column(String(256), nullable=False)
+
+
 
 class Favorite(Base):
     __tablename__ = 'favorite'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(256), nullable=False)
-    planet_id = Column(String(256), nullable=False)
-    character_id = Column(String(256), nullable=False)
+    user_id = Column(Integer, ForeignKey('User.id'))
+    planet_id = Column(Integer, ForeignKey('Planet.id'))
+    character_id = Column(Integer, ForeignKey('Character.id'))
 
 
 class Character(Base):
@@ -34,12 +37,12 @@ class Character(Base):
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(256))
-    birth_year = Column(String(256))
+    birth_year = Column(Integer)
     eye_color = Column(String(256), nullable=False)
     gender = Column(String(256), nullable=False)
     hair_color = Column(String(256), nullable=False)
-    height = Column(String(256), nullable=False)
-    mass = Column(String(256), nullable=False)
+    height = Column(Integer, nullable=False)
+    mass = Column(Integer, nullable=False)
     skin_color = Column(String(256), nullable=False)
     homeworld = Column(String(256), nullable=False)
     url = Column(String(256), nullable=False)
@@ -50,11 +53,11 @@ class Planet(Base):
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(256))
-    diameter = Column(String(256))
-    rotation_period = Column(String(256), nullable=False)
-    orbital_period = Column(Integer, ForeignKey('person.id'))
-    gravity = Column(String(256), nullable=False)
-    population = Column(String(256), nullable=False)
+    diameter = Column(Integer)
+    rotation_period = Column(Integer, nullable=False)
+    orbital_period = Column(Integer)
+    gravity = Column(Integer, nullable=False)
+    population = Column(Integer, nullable=False)
     climate = Column(String(256), nullable=False)
     terrain = Column(String(256), nullable=False)
     surface_water = Column(String(256), nullable=False)
@@ -65,3 +68,5 @@ class Planet(Base):
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
+
+# ForeignKey('person.id')
