@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -13,60 +13,66 @@ class User(Base):
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    username = Column(String(256), nullable=False)
-    first_name = Column(String(256), nullable=False)
-    last_name = Column(String(256), nullable=False)
-    email = Column(String(256), nullable=False)
-    password = Column(String(256), nullable=False)
+    username = Column(String(250), nullable=False)
+    first_name = Column(String(250), nullable=False)
+    last_name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    address = Column(String(250), nullable=False)
+    password = Column(String(250), nullable=False)
 
 
-
-class Favorite(Base):
-    __tablename__ = 'favorite'
-    # Here we define columns for the table person
+class Address(Base):
+    __tablename__ = 'address'
+    # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
+    street_name = Column(String(250))
+    street_number = Column(String(250))
+    post_code = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('User.id'))
-    planet_id = Column(Integer, ForeignKey('Planet.id'))
-    character_id = Column(Integer, ForeignKey('Character.id'))
-
-
-class Character(Base):
-    __tablename__ = 'charcter'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256))
-    birth_year = Column(Integer)
-    eye_color = Column(String(256), nullable=False)
-    gender = Column(String(256), nullable=False)
-    hair_color = Column(String(256), nullable=False)
-    height = Column(Integer, nullable=False)
-    mass = Column(Integer, nullable=False)
-    skin_color = Column(String(256), nullable=False)
-    homeworld = Column(String(256), nullable=False)
-    url = Column(String(256), nullable=False)
-
-class Planet(Base):
-    __tablename__ = 'planet'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(256))
-    diameter = Column(Integer)
-    rotation_period = Column(Integer, nullable=False)
-    orbital_period = Column(Integer)
-    gravity = Column(Integer, nullable=False)
-    population = Column(Integer, nullable=False)
-    climate = Column(String(256), nullable=False)
-    terrain = Column(String(256), nullable=False)
-    surface_water = Column(String(256), nullable=False)
-    url = Column(String(256), nullable=False)
 
     def to_dict(self):
         return {}
 
-## Draw from SQLAlchemy base
-render_er(Base, 'diagram.png')
 
-# ForeignKey('person.id')
+class Post(Base):
+    __tablename__ = 'post'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('User.id'))
+    title = Column(String(250), nullable=False)
+    body = Column(String(250), nullable=False)
+    image =  Column(String(250), nullable=False)
+    comment =  Column(String(250), nullable=False)
+    like =  Column(Boolean(), nullable=False)
+    amount_of_likes =  Column(Integer, nullable=False)
+
+
+class Comment(Base):
+    __tablename__ = 'comment'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('User.id'))
+    post_id = Column(Integer, ForeignKey('Post.id'))
+    body = Column(String(250), nullable=False)
+    like =  Column(Boolean, nullable=False)
+    amount_of_likes =  Column(Integer, nullable=False)
+    date_created = Column(DateTime, nullable=False)
+
+
+class Like(Base):
+    __tablename__ = 'like'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('User.id'))
+    post_id = Column(Integer, ForeignKey('Post.id'))
+    comment_id = Column(Integer, ForeignKey('Comment.id'))
+    like =  Column(Boolean, nullable=False)
+    date_created = Column(DateTime, nullable=False)
+
+
+
+## Draw from SQLAlchemy base
+try:
+    result = render_er(Base, 'diagram.png')
+    print("Success! Check the diagram.png file")
+except Exception as e:
+    print("There was a problem genering the diagram")
+    raise e
