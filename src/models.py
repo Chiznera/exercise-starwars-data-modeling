@@ -13,6 +13,7 @@ class User(Base):
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
+    favorites = relationship("favorites")
     username = Column(String(256), nullable=False)
     first_name = Column(String(256), nullable=False)
     last_name = Column(String(256), nullable=False)
@@ -21,14 +22,14 @@ class User(Base):
 
 
 
-class Favorite(Base):
-    __tablename__ = 'favorite'
+class Favorites(Base):
+    __tablename__ = 'favorites'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('User.id'))
-    planet_id = Column(Integer, ForeignKey('Planet.id'))
-    character_id = Column(Integer, ForeignKey('Character.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    planet_id = Column(Integer, ForeignKey('planet.id'))
+    character_id = Column(Integer, ForeignKey('character.id'))
 
 
 class Character(Base):
@@ -36,6 +37,7 @@ class Character(Base):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
+    favorites = relationship("favorites")
     name = Column(String(256))
     birth_year = Column(Integer)
     eye_color = Column(String(256), nullable=False)
@@ -52,6 +54,7 @@ class Planet(Base):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
+    favorites = relationship("favorites")
     name = Column(String(256))
     diameter = Column(Integer)
     rotation_period = Column(Integer, nullable=False)
@@ -63,8 +66,8 @@ class Planet(Base):
     surface_water = Column(String(256), nullable=False)
     url = Column(String(256), nullable=False)
 
-    def to_dict(self):
-        return {}
+    # def to_dict(self):
+    #     return {}
 
 ## Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')
