@@ -27,13 +27,13 @@ class Favorites(Base):
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True, nullable=False)
     planet_id = Column(Integer, ForeignKey('planet.id'))
     character_id = Column(Integer, ForeignKey('character.id'))
 
 
 class Character(Base):
-    __tablename__ = 'charcter'
+    __tablename__ = 'character'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
